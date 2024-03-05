@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 232555817}
   - component: {fileID: 232555816}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -344,7 +344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cb306edef5d0c541819a73c1a1615fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scene: SampleScene
+  scene: PongArea
 --- !u!1 &367386912
 GameObject:
   m_ObjectHideFlags: 0

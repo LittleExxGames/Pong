@@ -33,10 +33,12 @@ public class Ball : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
+            GameMaster.gm.gameAudio.PlayWallSound();
             velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
         }
         if (collision.gameObject.CompareTag("Ping"))
         {
+            GameMaster.gm.gameAudio.PlayPaddleSound();
             velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
             velocity = new Vector2(velocity.x * ballIncrease, velocity.y * Random.Range(0.5f, 1.7f));
         }
