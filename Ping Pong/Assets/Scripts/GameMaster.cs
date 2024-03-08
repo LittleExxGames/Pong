@@ -6,6 +6,8 @@ public class GameMaster : MonoBehaviour
 {
     public static GameMaster gm;
     public GameAudio gameAudio;
+    public BallManager ballManager;
+    public GameRules gameRules;
     private void Awake()
     {
         gm = this;

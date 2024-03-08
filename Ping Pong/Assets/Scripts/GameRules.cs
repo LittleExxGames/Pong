@@ -25,10 +25,6 @@ public class GameRules : MonoBehaviour
         for (int i = 1; i <= ballCount; i++)
         {
             ball = ballManager.SpawnBall();
-            /*ball.transform.position = new Vector3(0, 0, 0);
-            Vector2 start = new Vector2(Random.Range(1f, 5f), Random.Range(1f, 5f));
-            Vector2 direction = new Vector2(Random.Range(0, 2) * 2 - 1, Random.Range(0, 2) * 2 - 1);
-            ball.GetComponent<Ball>().SetVelocity(start * direction);*/
         }
        
     }

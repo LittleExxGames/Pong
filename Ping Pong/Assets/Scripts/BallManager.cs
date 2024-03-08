@@ -11,8 +11,14 @@ public class BallManager : MonoBehaviour//, IComparable
     [SerializeField]
     private GameObject ballPrefab;
 
+    private void Start()
+    {
+        GameMaster.gm.ballManager = this;
+    }
+
     private void Update()
     {
+        ReplaceNullObjects();
         ballList.Sort((obj1, obj2) =>
         {
             // Get the x values of the transforms
@@ -45,11 +51,20 @@ public class BallManager : MonoBehaviour//, IComparable
         Vector2 direction = new Vector2(Random.Range(0, 2) * 2 - 1, Random.Range(0, 2) * 2 - 1);
         go.GetComponent<Ball>().SetVelocity(start * direction);
     }
-    /*public float CompareTo(GameObject go)
+    private void RemoveNullObjects()
     {
-        for (int i = 0; i < ballList.Count; i++)
-        {
-
+        ballList.RemoveAll(ball => ball == null);
+    }
+    private void ReplaceNullObjects()
+    {
+        for (int i = ballList.Count - 1; i >= 0; i--)
+        {      
+            if (ballList[i] == null)
+            {
+                // Remove null element
+                ballList.RemoveAt(i);
+                SpawnBall();
+            }
         }
-    }*/
+    }
 }

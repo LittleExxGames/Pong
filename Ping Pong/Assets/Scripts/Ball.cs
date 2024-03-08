@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
@@ -7,7 +8,7 @@ public class Ball : MonoBehaviour
     private Rigidbody2D rb;
     private float ballIncrease = 1.1f;
     private float maxSpeed = 15;
-    private float minSpeed = 1.25f;
+    private float minSpeed = 2f;
     private bool pastMinY = false;
     private Vector2 velocity;
 
@@ -27,6 +28,7 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.CompareTag("Goal"))
         {
             collision.gameObject.GetComponent<Goal>().Scored(gameObject);
+            GetComponent<TrailRenderer>().Clear();
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -43,6 +45,19 @@ public class Ball : MonoBehaviour
             velocity = new Vector2(velocity.x * ballIncrease, velocity.y * Random.Range(0.5f, 1.7f));
         }
         CapVelocity();
+    }
+
+    //Simulates collision to destroy balls when colliding on the top or bottom.
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ping"))
+        {
+            if (Mathf.Abs(collision.gameObject.transform.position.x) - 0.2f <= Mathf.Abs(gameObject.transform.position.x))
+            {
+                GameMaster.gm.gameAudio.PlayPaddleSound();
+                Destroy(gameObject);
+            }
+        }
     }
     public void SetVelocity(Vector2 v2)
     {

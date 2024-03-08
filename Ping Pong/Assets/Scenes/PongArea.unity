@@ -298,6 +298,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameAudio: {fileID: 1165192995}
+  ballManager: {fileID: 0}
+  gameRules: {fileID: 0}
 --- !u!4 &224017576
 Transform:
   m_ObjectHideFlags: 0
@@ -1905,7 +1907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballManager: {fileID: 1165192994}
-  speed: 3
+  speed: 4
 --- !u!1 &2032317895
 GameObject:
   m_ObjectHideFlags: 0
