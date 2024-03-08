@@ -6,6 +6,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private ParticleSystem particles;
     private float ballIncrease = 1.1f;
     private float maxSpeed = 15;
     private float minSpeed = 2f;
@@ -16,6 +17,7 @@ public class Ball : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        particles = GetComponentInChildren<ParticleSystem>();
         velocity = new Vector2(-3.5f, 4);
     }
 
@@ -37,12 +39,14 @@ public class Ball : MonoBehaviour
         {
             GameMaster.gm.gameAudio.PlayWallSound();
             velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
+            BurstParticles(5);
         }
         if (collision.gameObject.CompareTag("Ping"))
         {
             GameMaster.gm.gameAudio.PlayPaddleSound();
             velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
             velocity = new Vector2(velocity.x * ballIncrease, velocity.y * Random.Range(0.5f, 1.7f));
+            BurstParticles(8);
         }
         CapVelocity();
     }
@@ -55,6 +59,10 @@ public class Ball : MonoBehaviour
             if (Mathf.Abs(collision.gameObject.transform.position.x) - 0.2f <= Mathf.Abs(gameObject.transform.position.x))
             {
                 GameMaster.gm.gameAudio.PlayPaddleSound();
+                BurstParticles(12);
+                transform.DetachChildren();
+                var main = particles.main;
+                main.stopAction = ParticleSystemStopAction.Destroy;
                 Destroy(gameObject);
             }
         }
@@ -78,5 +86,10 @@ public class Ball : MonoBehaviour
             }
         }
         pastMinY = !pastMinY;
+    }
+
+    private void BurstParticles(int amount)
+    {
+        particles.Emit(amount);
     }
 }

@@ -55,13 +55,13 @@ public class BallManager : MonoBehaviour//, IComparable
     {
         ballList.RemoveAll(ball => ball == null);
     }
+    // Replaces the balls that were destroyed by spawning new ones through detecting if a gameobject is null in ballList.
     private void ReplaceNullObjects()
     {
         for (int i = ballList.Count - 1; i >= 0; i--)
         {      
             if (ballList[i] == null)
             {
-                // Remove null element
                 ballList.RemoveAt(i);
                 SpawnBall();
             }
