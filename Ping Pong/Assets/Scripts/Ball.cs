@@ -7,23 +7,37 @@ public class Ball : MonoBehaviour
 {
     private Rigidbody2D rb;
     private ParticleSystem particles;
+    private bool settingVelocity = true;
     private float ballIncrease = 1.1f;
     private float maxSpeed = 15;
     private float minSpeed = 2f;
     private bool pastMinY = false;
     private Vector2 velocity;
+    public bool invert = false;
+    public Camera c;
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         particles = GetComponentInChildren<ParticleSystem>();
-        velocity = new Vector2(-3.5f, 4);
+        if (velocity == null)
+        {
+            velocity = new Vector2(-3.5f, 4);
+        }
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = velocity;
+        if ( invert == true)
+        {
+            InvertMovement();
+            invert = false;
+        }
+        if (settingVelocity)
+        {
+            rb.velocity = velocity;
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -45,7 +59,8 @@ public class Ball : MonoBehaviour
         {
             GameMaster.gm.gameAudio.PlayPaddleSound();
             velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
-            velocity = new Vector2(velocity.x * ballIncrease, velocity.y * Random.Range(0.5f, 1.7f));
+            float randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.5f, 1.6f));
+            velocity = new Vector2(velocity.x * ballIncrease, randomDir);
             BurstParticles(8);
         }
         CapVelocity();
@@ -71,6 +86,10 @@ public class Ball : MonoBehaviour
     {
         velocity = v2;
     }
+    public void DisableVelocity()
+    {
+        settingVelocity = false;
+    }
     private void CapVelocity()
     {
         velocity = new Vector2(Mathf.Clamp(velocity.x, -maxSpeed, maxSpeed), Mathf.Clamp(velocity.y, -maxSpeed, maxSpeed));
@@ -91,5 +110,20 @@ public class Ball : MonoBehaviour
     private void BurstParticles(int amount)
     {
         particles.Emit(amount);
+    }
+    public void InvertMovement()
+    {
+        if (c.transform.rotation != Quaternion.Euler(0, 0, 90))
+        {
+            c.transform.rotation = Quaternion.Euler(0, 0, 90);
+            c.orthographicSize = 7;
+        }
+        else
+        {
+            c.transform.rotation = Quaternion.Euler(0, 0, 0);
+            c.orthographicSize = 5;
+        }
+        transform.position = new Vector2(transform.position.y, transform.position.x);
+        velocity = new Vector2(velocity.y, velocity.x);
     }
 }

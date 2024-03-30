@@ -7,18 +7,23 @@ public class GameRules : MonoBehaviour
     public Vector2 gameStart;
     public Vector2 gameRamp;
     private GameObject ball;
-    private int ballCount = 2;
+    private int ballCount;
     private BallManager ballManager;
+    public bool gameEnd = false;
+
+    private void Update()
+    {
+        if (gameEnd)
+        {
+            GameEnd();
+            gameEnd = false;
+        }
+    }
     private void Awake()
     {
+        ballCount = LevelSettings.levelSettings.GetBallCount();
         ballManager = GetComponent<BallManager>();
         GameStart();
-    }
-    public void NextLevel()
-    {
-        ball.transform.position = new Vector3(0, 0, 0);
-        //ball.GetComponent<Rigidbody2D>().velocity = gameStart;
-        ball.GetComponent<Ball>().SetVelocity(gameStart);
     }
     public void GameStart()
     {
@@ -27,5 +32,14 @@ public class GameRules : MonoBehaviour
             ball = ballManager.SpawnBall();
         }
        
+    }
+    public void GameEnd()
+    {
+        ballManager.BallDrop();
+        GameMaster.gm.gameAudio.GetComponent<AudioSetter>().doAL = true;
+    }
+    public void GameWin()
+    {
+
     }
 }

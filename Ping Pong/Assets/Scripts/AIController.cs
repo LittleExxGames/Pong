@@ -6,7 +6,6 @@ using UnityEngine;
 public class AIController : MonoBehaviour
 {
     public BallManager ballManager;
-    //public GameObject ball;
     private Vector2 ballY;
     private Vector2 velocity;
     public float speed = 1;
@@ -16,13 +15,13 @@ public class AIController : MonoBehaviour
         foreach (GameObject go in ballManager.ballList)
         {
             velocity = go.GetComponent<Rigidbody2D>().velocity;
-            if (Mathf.Sign(velocity.x) != -1)
+            if (Mathf.Sign(velocity.x) == Mathf.Sign(transform.position.x))
             {
                 ballY = go.transform.position;
                 break;
             }
         }
-        if (ballY.x < transform.position.x)
+        if (Mathf.Abs(ballY.x) < Mathf.Abs(transform.position.x))
         {
             if (Mathf.Abs(ballY.y - transform.position.y) < 0.5f || Mathf.Abs(Mathf.Abs(transform.position.y) - maxDistance) < 0.5f)
             {

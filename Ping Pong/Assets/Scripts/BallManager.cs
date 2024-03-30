@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -47,9 +48,10 @@ public class BallManager : MonoBehaviour//, IComparable
     public void Center(GameObject go)
     {
         go.transform.position = Vector2.zero;
-        Vector2 start = new Vector2(Random.Range(1f, 5f), Random.Range(1f, 5f));
+        Vector2 start = new Vector2(Random.Range(1f, 5f), Random.Range(0.5f, 5f));
         Vector2 direction = new Vector2(Random.Range(0, 2) * 2 - 1, Random.Range(0, 2) * 2 - 1);
         go.GetComponent<Ball>().SetVelocity(start * direction);
+        Debug.Log("Ball start drection---  " + (start*direction));
     }
     private void RemoveNullObjects()
     {
@@ -66,5 +68,21 @@ public class BallManager : MonoBehaviour//, IComparable
                 SpawnBall();
             }
         }
+    }
+
+    public void BallDrop()
+    {
+        foreach (GameObject  b in ballList)
+        {
+            b.GetComponent<BoxCollider2D>().enabled = false;
+            b.GetComponent<Rigidbody2D>().gravityScale = 2;
+            b.GetComponent<Ball>().DisableVelocity();
+            StartCoroutine(DisableWait(b));
+        }
+    }
+    private IEnumerator DisableWait(GameObject b)
+    {
+        yield return new WaitForSeconds(2f);
+        b.SetActive(false);
     }
 }

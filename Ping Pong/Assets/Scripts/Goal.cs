@@ -7,7 +7,6 @@ public class Goal : MonoBehaviour
 {
     public bool isPlayerGoal;
     public ScoreKeeper scoreKeeper;
-    public GameRules gameRules;
     public BallManager ballManager;
     public void Scored(GameObject go)
     {
@@ -20,7 +19,6 @@ public class Goal : MonoBehaviour
             scoreKeeper.UpdatePlayerScore();
         }
         ballManager.Center(go);
-        //gameRules.GameStart();
     }
 
 }

@@ -10,6 +10,10 @@ public class GameMaster : MonoBehaviour
     public GameRules gameRules;
     private void Awake()
     {
-        gm = this;
+        if (gm == null)
+        {
+            gm = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 }

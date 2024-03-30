@@ -6,27 +6,40 @@ using UnityEngine;
 public class ScoreKeeper : MonoBehaviour
 {
     private int pointsPlayer;
-    private int pointsAI;
     public int pointsNeeded;
-    [SerializeField]
-    private TextMeshProUGUI aiText;
+    private int pointsAI;
     [SerializeField]
     private TextMeshProUGUI playerText;
     [SerializeField]
     private TextMeshProUGUI neededPointsText;
+    [SerializeField]
+    private TextMeshProUGUI aiText;
 
     private void Update()
     {
-        playerText.text = "Player: " + pointsPlayer;
-        aiText.text = "AI: " + pointsAI;
-        neededPointsText.text = "Points nedded: " + pointsNeeded;
+        playerText.text = string.Format("{0, -10}" + pointsPlayer, "Player: ");
+        neededPointsText.text = string.Format("{0, -10}" + pointsNeeded,"First To: ");
+        aiText.text = string.Format("{0, -10}" + pointsAI, "AI: ");
     }
     public void UpdatePlayerScore()
     {
         pointsPlayer++;
+        ScoreCheck();
     }
     public void UpdateAIScore()
     {
         pointsAI++;
+        ScoreCheck();
+    }
+    private void ScoreCheck()
+    {
+        if(pointsPlayer == pointsNeeded)
+        {
+
+        }
+        else if(pointsAI == pointsNeeded)
+        {
+            GameMaster.gm.gameRules.GameEnd();
+        }
     }
 }
