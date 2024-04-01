@@ -14,7 +14,7 @@ public class BallManager : MonoBehaviour//, IComparable
 
     private void Start()
     {
-        GameMaster.gm.ballManager = this;
+        GameMaster.ballManager = this;
     }
 
     private void Update()
@@ -48,10 +48,9 @@ public class BallManager : MonoBehaviour//, IComparable
     public void Center(GameObject go)
     {
         go.transform.position = Vector2.zero;
-        Vector2 start = new Vector2(Random.Range(1f, 5f), Random.Range(0.5f, 5f));
+        Vector2 start = new Vector2(Random.Range(1f, 6f), Random.Range(1f, 6f));
         Vector2 direction = new Vector2(Random.Range(0, 2) * 2 - 1, Random.Range(0, 2) * 2 - 1);
         go.GetComponent<Ball>().SetVelocity(start * direction);
-        Debug.Log("Ball start drection---  " + (start*direction));
     }
     private void RemoveNullObjects()
     {

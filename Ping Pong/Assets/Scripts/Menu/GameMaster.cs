@@ -5,9 +5,9 @@ using UnityEngine;
 public class GameMaster : MonoBehaviour
 {
     public static GameMaster gm;
-    public GameAudio gameAudio;
-    public BallManager ballManager;
-    public GameRules gameRules;
+    public static GameAudio gameAudio;
+    public static BallManager ballManager;
+    public static GameRules gameRules;
     private void Awake()
     {
         if (gm == null)

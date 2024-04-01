@@ -6,21 +6,27 @@ public class PlayerController : MonoBehaviour
 {
     public float speed;
     private int maxDistance = 3;
-    void Start()
-    {
-
-    }
+    private static bool canControl = true;
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.DownArrow) && gameObject.transform.position.y > -maxDistance)
+        if (!canControl)
         {
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, transform.position.y - 0.5f), speed * Time.fixedDeltaTime);
+            return;
         }
-        else if (Input.GetKey(KeyCode.UpArrow) && gameObject.transform.position.y < maxDistance)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, transform.position.y + 0.5f), speed * Time.fixedDeltaTime);
-        }
+            if (Input.GetKey(KeyCode.DownArrow) && gameObject.transform.position.y > -maxDistance)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, transform.position.y - 0.5f), speed * Time.fixedDeltaTime);
+            }
+            else if (Input.GetKey(KeyCode.UpArrow) && gameObject.transform.position.y < maxDistance)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, transform.position.y + 0.5f), speed * Time.fixedDeltaTime);
+            }
+    }
+
+    public static void CanControl(bool set)
+    {
+        canControl = set;
     }
 }

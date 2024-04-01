@@ -35,11 +35,11 @@ public class ScoreKeeper : MonoBehaviour
     {
         if(pointsPlayer == pointsNeeded)
         {
-
+            GameMaster.gameRules.GameWin();
         }
         else if(pointsAI == pointsNeeded)
         {
-            GameMaster.gm.gameRules.GameEnd();
+            GameMaster.gameRules.GameEnd();
         }
     }
 }

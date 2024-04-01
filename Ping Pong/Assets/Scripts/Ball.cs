@@ -9,8 +9,8 @@ public class Ball : MonoBehaviour
     private ParticleSystem particles;
     private bool settingVelocity = true;
     private float ballIncrease = 1.1f;
-    private float maxSpeed = 15;
-    private float minSpeed = 2f;
+    private float maxSpeed = 20;
+    private float minSpeed = 3.5f;
     private bool pastMinY = false;
     private Vector2 velocity;
     public bool invert = false;
@@ -51,15 +51,29 @@ public class Ball : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
-            GameMaster.gm.gameAudio.PlayWallSound();
+            GameMaster.gameAudio.PlayWallSound();
             velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
             BurstParticles(5);
         }
         if (collision.gameObject.CompareTag("Ping"))
         {
-            GameMaster.gm.gameAudio.PlayPaddleSound();
+            GameMaster.gameAudio.PlayPaddleSound();
             velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
-            float randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.5f, 1.6f));
+            float randomDir = 0;// = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.5f, 1.6f));
+            if (velocity.y <= 0.2f && velocity.y >= -0.2f)
+            {
+                randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
+            }
+            else if (velocity.y > 0.2f)
+            {
+                randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
+                Mathf.Clamp(randomDir, 0, -Mathf.Infinity);
+            }
+            else if(velocity.y < -0.2f)
+            {
+                randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
+                Mathf.Clamp(randomDir, 0, -Mathf.Infinity);
+            }
             velocity = new Vector2(velocity.x * ballIncrease, randomDir);
             BurstParticles(8);
         }
@@ -73,7 +87,7 @@ public class Ball : MonoBehaviour
         {
             if (Mathf.Abs(collision.gameObject.transform.position.x) - 0.2f <= Mathf.Abs(gameObject.transform.position.x))
             {
-                GameMaster.gm.gameAudio.PlayPaddleSound();
+                GameMaster.gameAudio.PlayPaddleSound();
                 BurstParticles(12);
                 transform.DetachChildren();
                 var main = particles.main;
@@ -85,6 +99,7 @@ public class Ball : MonoBehaviour
     public void SetVelocity(Vector2 v2)
     {
         velocity = v2;
+        CapVelocity();
     }
     public void DisableVelocity()
     {
@@ -104,7 +119,7 @@ public class Ball : MonoBehaviour
                 velocity.y = minSpeed * Mathf.Sign(velocity.y);
             }
         }
-        pastMinY = !pastMinY;
+        pastMinY = Random.Range(0,2) == 1;
     }
 
     private void BurstParticles(int amount)

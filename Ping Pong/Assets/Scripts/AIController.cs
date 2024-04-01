@@ -10,8 +10,13 @@ public class AIController : MonoBehaviour
     private Vector2 velocity;
     public float speed = 1;
     private float maxDistance = 3.15f;
+    private static bool canMove = true;
     private void FixedUpdate()
     {
+        if (!canMove)
+        {
+            return;
+        }
         foreach (GameObject go in ballManager.ballList)
         {
             velocity = go.GetComponent<Rigidbody2D>().velocity;
@@ -34,5 +39,9 @@ public class AIController : MonoBehaviour
                 Debug.Log("Using MoveTowards");
             }
         }  
+    }
+    public static void CanMove(bool set)
+    {
+        canMove = set;
     }
 }

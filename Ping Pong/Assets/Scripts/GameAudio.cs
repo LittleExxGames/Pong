@@ -9,7 +9,7 @@ public class GameAudio : MonoBehaviour
     public AudioClip paddleSound;
     private void Start()
     {
-        GameMaster.gm.gameAudio = this;
+        GameMaster.gameAudio = this;
     }
 
     public void PlayWallSound()
