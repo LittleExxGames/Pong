@@ -15,6 +15,9 @@ public class GameRules : MonoBehaviour
     private GameObject winScreen;
     [SerializeField]
     private GameObject loseScreen;
+    private int chID;
+    [SerializeField]
+    private GameObject[] challenges;
 
     private void Update()
     {
@@ -26,9 +29,11 @@ public class GameRules : MonoBehaviour
     }
     private void Awake()
     {
-        ballCount = LevelSettings.levelSettings.GetBallCount();
+        ballCount = LevelSettings.GetBallCount();
         ballManager = GetComponent<BallManager>();
         GameMaster.gameRules = this;
+        chID = LevelSettings.GetID();
+        SetChallenge();
         GameStart();
     }
     public void GameStart()
@@ -50,13 +55,49 @@ public class GameRules : MonoBehaviour
     }
     public void GameWin()
     {
+        ballManager.BallDrop();
         PlayerController.CanControl(false);
         AIController.CanMove(false);
         StartCoroutine(MenuDelay(winScreen));
+        CompleteChallenge();
+        LevelSettings.ResetLevelSettings();
     }
     IEnumerator MenuDelay(GameObject screen)
     {
         yield return new WaitForSeconds(1);
         screen.SetActive(true);
+    }
+
+    private void CompleteChallenge()
+    {
+        switch (chID)
+        {
+            case 0:
+                break;
+                case 1:
+                SaveData.chOneCompleted = true;
+                break;
+                case 2:
+                SaveData.chTwoCompleted = true;
+                break;
+        }
+    }
+
+    private void SetChallenge()
+    {
+        switch (chID)
+        {
+            case 0:
+                challenges[0].SetActive(true);
+                break;
+            case 1:
+                challenges[0].SetActive(true);
+                ballManager.SetSpawnPositions(new Vector2[] { new Vector2(0, 3), Vector2.zero, new Vector2(0, -3) });
+                break;
+            case 2:
+                challenges[1].SetActive(true);
+                ballManager.SetSpawnPositions(new Vector2[] { new Vector2(-4, 0), new Vector2(4, 0) });
+                break;
+        }
     }
 }

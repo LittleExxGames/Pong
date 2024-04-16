@@ -39,7 +39,7 @@ public class Ball : MonoBehaviour
             rb.velocity = velocity;
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Goal"))
         {
@@ -57,25 +57,49 @@ public class Ball : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Ping"))
         {
-            GameMaster.gameAudio.PlayPaddleSound();
-            velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
-            float randomDir = 0;// = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.5f, 1.6f));
-            if (velocity.y <= 0.2f && velocity.y >= -0.2f)
+
+            /*Vector2 contactNormal = collision.GetContact(0).normal;
+            Debug.Log("Collision clipping?" + "--- " + collision.GetContact(0).point.y + "   ---- " + collision.gameObject.transform.position.y + collision.gameObject.GetComponent<BoxCollider2D>().size.y);
+            if ((Vector2.Dot(contactNormal, Vector2.up) > 0) || (Vector2.Dot(contactNormal, Vector2.up) < 0))
             {
-                randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
-            }
-            else if (velocity.y > 0.2f)
+                GameMaster.gameAudio.PlayPaddleSound();
+                BurstParticles(12);
+                transform.DetachChildren();
+                var main = particles.main;
+                main.stopAction = ParticleSystemStopAction.Destroy;
+                Destroy(gameObject);
+            }*/
+            if (collision.contacts[0].normal == Vector2.up || collision.contacts[0].normal == Vector2.down)
             {
-                randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
-                Mathf.Clamp(randomDir, 0, -Mathf.Infinity);
+                GameMaster.gameAudio.PlayPaddleSound();
+                BurstParticles(12);
+                transform.DetachChildren();
+                var main = particles.main;
+                main.stopAction = ParticleSystemStopAction.Destroy;
+                Destroy(gameObject);
             }
-            else if(velocity.y < -0.2f)
+            else
             {
-                randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
-                Mathf.Clamp(randomDir, 0, -Mathf.Infinity);
+                GameMaster.gameAudio.PlayPaddleSound();
+                velocity = Vector2.Reflect(velocity, collision.GetContact(0).normal);
+                float randomDir = 0;// = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.5f, 1.6f));
+                if (velocity.y <= 0.2f && velocity.y >= -0.2f)
+                {
+                    randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
+                }
+                else if (velocity.y > 0.2f)
+                {
+                    randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
+                    Mathf.Clamp(randomDir, 0, -Mathf.Infinity);
+                }
+                else if (velocity.y < -0.2f)
+                {
+                    randomDir = Mathf.Sign(velocity.y) * (Mathf.Abs(velocity.y) + Random.Range(-1.6f, 1.6f));
+                    Mathf.Clamp(randomDir, 0, -Mathf.Infinity);
+                }
+                velocity = new Vector2(velocity.x * ballIncrease, randomDir);
+                BurstParticles(8);
             }
-            velocity = new Vector2(velocity.x * ballIncrease, randomDir);
-            BurstParticles(8);
         }
         CapVelocity();
     }
@@ -85,7 +109,20 @@ public class Ball : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ping"))
         {
-            if (Mathf.Abs(collision.gameObject.transform.position.x) - 0.2f <= Mathf.Abs(gameObject.transform.position.x))
+            /*Vector2 check = new Vector2(0, collision.gameObject.transform.position.y - (collision.gameObject.transform.position.y - collision.GetContact(0).point.y));
+            if (((check.y <= collision.gameObject.transform.position.y) && (collision.GetContact(0).point.y > collision.gameObject.transform.position.y)) || ((check.y >= collision.gameObject.transform.position.y) && (collision.GetContact(0).point.y < collision.gameObject.transform.position.y)))
+            {
+                GameMaster.gameAudio.PlayPaddleSound();
+                BurstParticles(12);
+                transform.DetachChildren();
+                var main = particles.main;
+                main.stopAction = ParticleSystemStopAction.Destroy;
+                Destroy(gameObject);
+            }*/
+
+            /*Vector2 contactNormal = collision.GetContact(0).normal;
+
+            if ((Vector2.Dot(contactNormal, Vector2.up) > 0) || (Vector2.Dot(contactNormal, Vector2.up) < 0))
             {
                 GameMaster.gameAudio.PlayPaddleSound();
                 BurstParticles(12);
@@ -94,6 +131,31 @@ public class Ball : MonoBehaviour
                 main.stopAction = ParticleSystemStopAction.Destroy;
                 Destroy(gameObject);
             }
+            else
+            {
+                Debug.Log("Collision clipping?" + "--- " + collision.GetContact(0).point.y + "   ---- " + collision.gameObject.transform.position.y + collision.gameObject.GetComponent<BoxCollider2D>().size.y);
+            }*/
+
+
+            if (collision.contacts[0].normal == Vector2.up || collision.contacts[0].normal == Vector2.down)
+            {
+                GameMaster.gameAudio.PlayPaddleSound();
+                BurstParticles(12);
+                transform.DetachChildren();
+                var main = particles.main;
+                main.stopAction = ParticleSystemStopAction.Destroy;
+                Destroy(gameObject);
+            }
+
+            /*if (Mathf.Abs(collision.gameObject.transform.position.x) - 0.2f <= Mathf.Abs(gameObject.transform.position.x))
+            {
+                GameMaster.gameAudio.PlayPaddleSound();
+                BurstParticles(12);
+                transform.DetachChildren();
+                var main = particles.main;
+                main.stopAction = ParticleSystemStopAction.Destroy;
+                Destroy(gameObject);
+            }*/
         }
     }
     public void SetVelocity(Vector2 v2)

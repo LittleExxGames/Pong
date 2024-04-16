@@ -8,7 +8,14 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = this;
-        DontDestroyOnLoad(gameObject);
+        if (inputManager == null)
+        {
+            inputManager = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

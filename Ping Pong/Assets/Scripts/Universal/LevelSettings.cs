@@ -9,6 +9,16 @@ public class LevelSettings : MonoBehaviour
     private static float paddleSize;
     private static float paddleSpeed;
     private static bool doubleAI;
+    private static int chID;
+
+    public static void ResetLevelSettings()
+    {
+        ballCount = 1;
+        paddleSize = 1;
+        paddleSpeed = 1;
+        doubleAI = false;
+        chID = 0;
+    }
 
     private void Awake()
     {
@@ -17,20 +27,28 @@ public class LevelSettings : MonoBehaviour
             levelSettings = this;
         }
     }
-    public void SetBallCount(int count)
+    public static void SetBallCount(int count)
     {
         ballCount = count;
     }
-    public int GetBallCount()
+    public static int GetBallCount()
     {
         return ballCount;
     }
-    public void SetDoubleAI(bool a)
+    public static void SetDoubleAI(bool a)
     {
         doubleAI = a;
     }
-    public bool GetDoubleAI()
+    public static bool GetDoubleAI()
     {
         return doubleAI;
+    }
+    public static void SetID(int id)
+    {
+        chID = id;
+    }
+    public static int GetID()
+    {
+        return chID;
     }
 }

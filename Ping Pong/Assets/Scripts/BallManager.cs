@@ -11,6 +11,7 @@ public class BallManager : MonoBehaviour//, IComparable
     public List<GameObject> ballList;
     [SerializeField]
     private GameObject ballPrefab;
+    private Vector2[] spawnPositions = new Vector2[1] { Vector2.zero };
 
     private void Start()
     {
@@ -47,7 +48,7 @@ public class BallManager : MonoBehaviour//, IComparable
     }
     public void Center(GameObject go)
     {
-        go.transform.position = Vector2.zero;
+        go.transform.position = spawnPositions[Random.Range(0, spawnPositions.Count())];
         Vector2 start = new Vector2(Random.Range(1f, 6f), Random.Range(1f, 6f));
         Vector2 direction = new Vector2(Random.Range(0, 2) * 2 - 1, Random.Range(0, 2) * 2 - 1);
         go.GetComponent<Ball>().SetVelocity(start * direction);
@@ -83,5 +84,9 @@ public class BallManager : MonoBehaviour//, IComparable
     {
         yield return new WaitForSeconds(2f);
         b.SetActive(false);
+    }
+    public void SetSpawnPositions(Vector2[] positions)
+    {
+        spawnPositions = positions;
     }
 }
