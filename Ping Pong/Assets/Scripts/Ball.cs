@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Ball : MonoBehaviour
 {
@@ -13,8 +14,10 @@ public class Ball : MonoBehaviour
     private float minSpeed = 3.5f;
     private bool pastMinY = false;
     private Vector2 velocity;
+    private Vector2 enterVel;
     public bool invert = false;
     public Camera c;
+
 
 
     void Start()
@@ -39,12 +42,23 @@ public class Ball : MonoBehaviour
             rb.velocity = velocity;
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Goal"))
+        {
+            enterVel = rb.velocity;
+        }
+    }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Goal"))
         {
-            collision.gameObject.GetComponent<Goal>().Scored(gameObject);
-            GetComponent<TrailRenderer>().Clear();
+            if(Mathf.Sign(enterVel.x) == Mathf.Sign(rb.velocity.x))
+            {
+                collision.gameObject.GetComponent<Goal>().Scored(gameObject);
+                GetComponent<TrailRenderer>().Clear();
+            }
+
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -58,9 +72,7 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.CompareTag("Ping"))
         {
 
-            /*Vector2 contactNormal = collision.GetContact(0).normal;
-            Debug.Log("Collision clipping?" + "--- " + collision.GetContact(0).point.y + "   ---- " + collision.gameObject.transform.position.y + collision.gameObject.GetComponent<BoxCollider2D>().size.y);
-            if ((Vector2.Dot(contactNormal, Vector2.up) > 0) || (Vector2.Dot(contactNormal, Vector2.up) < 0))
+            /*if (collision.contacts[0].normal == Vector2.up || collision.contacts[0].normal == Vector2.down)
             {
                 GameMaster.gameAudio.PlayPaddleSound();
                 BurstParticles(12);
@@ -69,7 +81,7 @@ public class Ball : MonoBehaviour
                 main.stopAction = ParticleSystemStopAction.Destroy;
                 Destroy(gameObject);
             }*/
-            if (collision.contacts[0].normal == Vector2.up || collision.contacts[0].normal == Vector2.down)
+            if (collision.contacts[0].normal.y > 0 || collision.contacts[0].normal.y < 0)
             {
                 GameMaster.gameAudio.PlayPaddleSound();
                 BurstParticles(12);
@@ -77,6 +89,7 @@ public class Ball : MonoBehaviour
                 var main = particles.main;
                 main.stopAction = ParticleSystemStopAction.Destroy;
                 Destroy(gameObject);
+                Debug.Log("Destroyed ball???");
             }
             else
             {
@@ -99,6 +112,7 @@ public class Ball : MonoBehaviour
                 }
                 velocity = new Vector2(velocity.x * ballIncrease, randomDir);
                 BurstParticles(8);
+                Debug.DrawRay(collision.GetContact(0).point, collision.GetContact(0).normal * 100, Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f), 10f);
             }
         }
         CapVelocity();
@@ -109,20 +123,7 @@ public class Ball : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ping"))
         {
-            /*Vector2 check = new Vector2(0, collision.gameObject.transform.position.y - (collision.gameObject.transform.position.y - collision.GetContact(0).point.y));
-            if (((check.y <= collision.gameObject.transform.position.y) && (collision.GetContact(0).point.y > collision.gameObject.transform.position.y)) || ((check.y >= collision.gameObject.transform.position.y) && (collision.GetContact(0).point.y < collision.gameObject.transform.position.y)))
-            {
-                GameMaster.gameAudio.PlayPaddleSound();
-                BurstParticles(12);
-                transform.DetachChildren();
-                var main = particles.main;
-                main.stopAction = ParticleSystemStopAction.Destroy;
-                Destroy(gameObject);
-            }*/
-
-            /*Vector2 contactNormal = collision.GetContact(0).normal;
-
-            if ((Vector2.Dot(contactNormal, Vector2.up) > 0) || (Vector2.Dot(contactNormal, Vector2.up) < 0))
+            if (collision.contacts[0].normal.y > 0 || collision.contacts[0].normal.y < 0)
             {
                 GameMaster.gameAudio.PlayPaddleSound();
                 BurstParticles(12);
@@ -131,13 +132,7 @@ public class Ball : MonoBehaviour
                 main.stopAction = ParticleSystemStopAction.Destroy;
                 Destroy(gameObject);
             }
-            else
-            {
-                Debug.Log("Collision clipping?" + "--- " + collision.GetContact(0).point.y + "   ---- " + collision.gameObject.transform.position.y + collision.gameObject.GetComponent<BoxCollider2D>().size.y);
-            }*/
-
-
-            if (collision.contacts[0].normal == Vector2.up || collision.contacts[0].normal == Vector2.down)
+            /*if (collision.contacts[0].normal == Vector2.up || collision.contacts[0].normal == Vector2.down)
             {
                 GameMaster.gameAudio.PlayPaddleSound();
                 BurstParticles(12);
@@ -145,7 +140,7 @@ public class Ball : MonoBehaviour
                 var main = particles.main;
                 main.stopAction = ParticleSystemStopAction.Destroy;
                 Destroy(gameObject);
-            }
+            }*/
 
             /*if (Mathf.Abs(collision.gameObject.transform.position.x) - 0.2f <= Mathf.Abs(gameObject.transform.position.x))
             {
@@ -166,6 +161,14 @@ public class Ball : MonoBehaviour
     public void DisableVelocity()
     {
         settingVelocity = false;
+    }
+    public void SetMaxVelocity(float newMax)
+    {
+        maxSpeed = newMax;
+    }
+    public void SetMinVelocity(float newMin)
+    {
+        minSpeed = newMin;
     }
     private void CapVelocity()
     {

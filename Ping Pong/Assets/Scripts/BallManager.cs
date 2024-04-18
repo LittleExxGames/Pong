@@ -11,9 +11,11 @@ public class BallManager : MonoBehaviour//, IComparable
     public List<GameObject> ballList;
     [SerializeField]
     private GameObject ballPrefab;
+    private Vector2[] startSpeeds = { new Vector2(1f, 6f), new Vector2(1f, 6f) }; 
+    private Vector2 cap = new Vector2(3.5f, 20f);
     private Vector2[] spawnPositions = new Vector2[1] { Vector2.zero };
 
-    private void Start()
+    private void Awake()
     {
         GameMaster.ballManager = this;
     }
@@ -36,7 +38,6 @@ public class BallManager : MonoBehaviour//, IComparable
                 return 0;
         });
 
-            //Debug.Log("Ball Order: " + ballList[0].name + " And: " + ballList[1]);
     }
     public GameObject SpawnBall()
     {
@@ -44,12 +45,14 @@ public class BallManager : MonoBehaviour//, IComparable
         ballPre.name = ballPre.name + " " + ballList.Count;
         ballList.Add(ballPre);
         Center(ballPre);
+        ballPre.GetComponent<Ball>().SetMinVelocity(cap.x);
+        ballPre.GetComponent<Ball>().SetMaxVelocity(cap.y);
         return ballPre;
     }
     public void Center(GameObject go)
     {
         go.transform.position = spawnPositions[Random.Range(0, spawnPositions.Count())];
-        Vector2 start = new Vector2(Random.Range(1f, 6f), Random.Range(1f, 6f));
+        Vector2 start = new Vector2(Random.Range(startSpeeds[0].x, startSpeeds[0].y), Random.Range(startSpeeds[1].x, startSpeeds[1].y));
         Vector2 direction = new Vector2(Random.Range(0, 2) * 2 - 1, Random.Range(0, 2) * 2 - 1);
         go.GetComponent<Ball>().SetVelocity(start * direction);
     }
@@ -83,10 +86,21 @@ public class BallManager : MonoBehaviour//, IComparable
     private IEnumerator DisableWait(GameObject b)
     {
         yield return new WaitForSeconds(2f);
-        b.SetActive(false);
+        if (b != null)
+        {
+            b.SetActive(false);
+        }
     }
     public void SetSpawnPositions(Vector2[] positions)
     {
         spawnPositions = positions;
+    }
+    public void SetStartSpeeds(Vector2[] speeds)
+    {
+        startSpeeds = speeds;
+    }
+    public void SetCap(Vector2 newCap)
+    {
+        cap = newCap;
     }
 }

@@ -97,6 +97,8 @@ public class GameRules : MonoBehaviour
             case 2:
                 challenges[1].SetActive(true);
                 ballManager.SetSpawnPositions(new Vector2[] { new Vector2(-4, 0), new Vector2(4, 0) });
+                ballManager.SetCap(new Vector2(2.5f, 9f));
+                AIController.SetSpeed(5);
                 break;
         }
     }
