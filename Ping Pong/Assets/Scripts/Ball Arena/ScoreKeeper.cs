@@ -6,7 +6,7 @@ using UnityEngine;
 public class ScoreKeeper : MonoBehaviour
 {
     private int pointsPlayer;
-    public int pointsNeeded;
+    private static int pointsNeeded;
     private int pointsAI;
     [SerializeField]
     private TextMeshProUGUI playerText;
@@ -31,6 +31,11 @@ public class ScoreKeeper : MonoBehaviour
         pointsAI++;
         ScoreCheck();
     }
+    public static void SetPointsNeeded(int newPointsNeeded)
+    {
+       pointsNeeded = newPointsNeeded;
+    }
+
     private void ScoreCheck()
     {
         if(pointsPlayer == pointsNeeded)

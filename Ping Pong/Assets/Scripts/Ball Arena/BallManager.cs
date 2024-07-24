@@ -9,9 +9,11 @@ using Random = UnityEngine.Random;
 public class BallManager : MonoBehaviour//, IComparable
 {
     public List<GameObject> ballList;
+
     [SerializeField]
     private GameObject ballPrefab;
-    private Vector2[] startSpeeds = { new Vector2(1f, 6f), new Vector2(1f, 6f) }; 
+
+    private Vector2[] startSpeeds = { new Vector2(1f, 6f), new Vector2(1f, 6f) };
     private Vector2 cap = new Vector2(3.5f, 20f);
     private Vector2[] spawnPositions = new Vector2[1] { Vector2.zero };
 
@@ -37,8 +39,8 @@ public class BallManager : MonoBehaviour//, IComparable
             else
                 return 0;
         });
-
     }
+
     public GameObject SpawnBall()
     {
         GameObject ballPre = Instantiate(ballPrefab);
@@ -47,8 +49,10 @@ public class BallManager : MonoBehaviour//, IComparable
         Center(ballPre);
         ballPre.GetComponent<Ball>().SetMinVelocity(cap.x);
         ballPre.GetComponent<Ball>().SetMaxVelocity(cap.y);
+        ballPre.GetComponent<Ball>().BurstLight();
         return ballPre;
     }
+
     public void Center(GameObject go)
     {
         go.transform.position = spawnPositions[Random.Range(0, spawnPositions.Count())];
@@ -56,15 +60,17 @@ public class BallManager : MonoBehaviour//, IComparable
         Vector2 direction = new Vector2(Random.Range(0, 2) * 2 - 1, Random.Range(0, 2) * 2 - 1);
         go.GetComponent<Ball>().SetVelocity(start * direction);
     }
+
     private void RemoveNullObjects()
     {
         ballList.RemoveAll(ball => ball == null);
     }
+
     // Replaces the balls that were destroyed by spawning new ones through detecting if a gameobject is null in ballList.
     private void ReplaceNullObjects()
     {
         for (int i = ballList.Count - 1; i >= 0; i--)
-        {      
+        {
             if (ballList[i] == null)
             {
                 ballList.RemoveAt(i);
@@ -75,7 +81,7 @@ public class BallManager : MonoBehaviour//, IComparable
 
     public void BallDrop()
     {
-        foreach (GameObject  b in ballList)
+        foreach (GameObject b in ballList)
         {
             b.GetComponent<BoxCollider2D>().enabled = false;
             b.GetComponent<Rigidbody2D>().gravityScale = 2;
@@ -83,6 +89,7 @@ public class BallManager : MonoBehaviour//, IComparable
             StartCoroutine(DisableWait(b));
         }
     }
+
     private IEnumerator DisableWait(GameObject b)
     {
         yield return new WaitForSeconds(2f);
@@ -91,14 +98,17 @@ public class BallManager : MonoBehaviour//, IComparable
             b.SetActive(false);
         }
     }
+
     public void SetSpawnPositions(Vector2[] positions)
     {
         spawnPositions = positions;
     }
+
     public void SetStartSpeeds(Vector2[] speeds)
     {
         startSpeeds = speeds;
     }
+
     public void SetCap(Vector2 newCap)
     {
         cap = newCap;

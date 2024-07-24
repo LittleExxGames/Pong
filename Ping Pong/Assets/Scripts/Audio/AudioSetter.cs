@@ -5,19 +5,22 @@ using UnityEngine;
 public class AudioSetter : MonoBehaviour
 {
     public bool doAL = false;
+
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (doAL)
         {
             AudioLoss();
         }
     }
+
     public void AudioLoss()
     {
         StartCoroutine(Slowdown());
     }
-    IEnumerator Slowdown()
+
+    private IEnumerator Slowdown()
     {
         float elapsedTime = 0f;
         while (elapsedTime < 2.5f)
@@ -28,8 +31,7 @@ public class AudioSetter : MonoBehaviour
             {
                 GetComponent<AudioSource>().Stop();
             }
-            yield return null;
+            yield return new WaitForSecondsRealtime(0f);
         }
     }
-
 }

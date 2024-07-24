@@ -7,6 +7,7 @@ public class GameAudio : MonoBehaviour
     public AudioSource audioS;
     public AudioClip wallSound;
     public AudioClip paddleSound;
+
     private void Start()
     {
         GameMaster.gameAudio = this;
@@ -16,6 +17,7 @@ public class GameAudio : MonoBehaviour
     {
         audioS.PlayOneShot(wallSound);
     }
+
     public void PlayPaddleSound()
     {
         audioS.PlayOneShot(paddleSound);

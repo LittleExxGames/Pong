@@ -8,12 +8,14 @@ public class GameMaster : MonoBehaviour
     public static GameAudio gameAudio;
     public static BallManager ballManager;
     public static GameRules gameRules;
+
     private void Awake()
     {
         if (gm == null)
         {
             gm = this;
             DontDestroyOnLoad(gameObject);
+            SaveData.Load();
         }
         else
         {

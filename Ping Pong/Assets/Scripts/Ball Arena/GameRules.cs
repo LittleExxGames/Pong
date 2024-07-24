@@ -10,29 +10,19 @@ public class GameRules : MonoBehaviour
     private int ballCount;
     private BallManager ballManager;
     public bool gameEnd = false;
-    private bool gameInput = false;
-    [SerializeField]
-    private GameObject winScreen;
-    [SerializeField]
-    private GameObject loseScreen;
     private int chID;
     [SerializeField]
     private GameObject[] challenges;
 
-    private void Update()
-    {
-        if (gameEnd)
-        {
-            GameEnd();
-            gameEnd = false;
-        }
-    }
     private void Awake()
     {
         ballCount = LevelSettings.GetBallCount();
         ballManager = GetComponent<BallManager>();
+        ScoreKeeper.SetPointsNeeded(LevelSettings.GetPointsNeeded());
         GameMaster.gameRules = this;
         chID = LevelSettings.GetID();
+        Time.timeScale = 1;
+        
         SetChallenge();
         GameStart();
     }
@@ -51,21 +41,21 @@ public class GameRules : MonoBehaviour
         GameMaster.gameAudio.GetComponent<AudioSetter>().doAL = true;
         PlayerController.CanControl(false);
         AIController.CanMove(false);
-        StartCoroutine(MenuDelay(loseScreen));
+        StartCoroutine(MenuDelay(ArenaMenu.MENU.LOSE));
     }
     public void GameWin()
     {
         ballManager.BallDrop();
         PlayerController.CanControl(false);
         AIController.CanMove(false);
-        StartCoroutine(MenuDelay(winScreen));
+        StartCoroutine(MenuDelay(ArenaMenu.MENU.WIN));
         CompleteChallenge();
-        LevelSettings.ResetLevelSettings();
+        SaveData.Save();
     }
-    IEnumerator MenuDelay(GameObject screen)
+    IEnumerator MenuDelay(ArenaMenu.MENU swap)
     {
         yield return new WaitForSeconds(1);
-        screen.SetActive(true);
+        ArenaMenu.arenaMenu.SetMenu(swap);
     }
 
     private void CompleteChallenge()
@@ -74,11 +64,14 @@ public class GameRules : MonoBehaviour
         {
             case 0:
                 break;
-                case 1:
+            case 1:
                 SaveData.chOneCompleted = true;
                 break;
-                case 2:
+            case 2:
                 SaveData.chTwoCompleted = true;
+                break;
+            case 3:
+                SaveData.chThreeCompleted = true;
                 break;
         }
     }
@@ -88,17 +81,28 @@ public class GameRules : MonoBehaviour
         switch (chID)
         {
             case 0:
+                Ball.SetBrightness(0);
                 challenges[0].SetActive(true);
+                AIController.SetSpeed(6.5f);
                 break;
             case 1:
+                Ball.SetBrightness(0);
                 challenges[0].SetActive(true);
                 ballManager.SetSpawnPositions(new Vector2[] { new Vector2(0, 3), Vector2.zero, new Vector2(0, -3) });
+                AIController.SetSpeed(7f);
                 break;
             case 2:
+                Ball.SetBrightness(0);
                 challenges[1].SetActive(true);
                 ballManager.SetSpawnPositions(new Vector2[] { new Vector2(-4, 0), new Vector2(4, 0) });
                 ballManager.SetCap(new Vector2(2.5f, 9f));
                 AIController.SetSpeed(5);
+                break;
+            case 3:
+                challenges[2].SetActive(true);
+                Ball.SetBrightness(3.85f);
+                AIController.SetSpeed(5);
+                ballManager.SetCap(new Vector2(3.5f, 14f));
                 break;
         }
     }

@@ -16,6 +16,7 @@ public class MenuCanvas : MonoBehaviour
     private void Awake()
     {
         menuCanvas = this;
+        Time.timeScale = 1f;
     }
     public void SetMenu(MENU swap)
     {
@@ -23,7 +24,18 @@ public class MenuCanvas : MonoBehaviour
         menu = swap;
         ActivateMenu();
     }
-
+    public void SetToSOptions()
+    {
+        SetMenu(MENU.SETTINGS);
+    }
+    public void SetToMenu()
+    {
+        SetMenu(MENU.MAIN);
+    }
+    public void SetToChallenges()
+    {
+        SetMenu(MENU.CHALLENGES);
+    }
     private void ActivateMenu()
     {
         switch (menu)

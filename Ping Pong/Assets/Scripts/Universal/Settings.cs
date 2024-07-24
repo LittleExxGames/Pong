@@ -6,27 +6,33 @@ using UnityEngine;
 public class Settings : MonoBehaviour
 {
     public static Settings settings;
-    private float audioVolume;
+    private float audioVolume = 1f;
     private bool musicEnabled = true;
-    private bool effectsSoundEnabled = true;
 
-    private int ballCount = 1;
-    private float paddleSize;
-    private float paddleSpeed;
     private void Awake()
     {
         if (settings == null)
         {
             settings = this;
         }
-    }
-    public void SetBallCount(int count)
+    } 
+
+    public void SetVolume(float volume)
     {
-        ballCount = count;
-    }
-    public int GetBallCount()
-    {
-        return ballCount;
+        audioVolume = volume;
     }
 
+    public float GetVolume()
+    {
+        return audioVolume;
+    }
+
+    public void SetMusicEnabled(bool enabled)
+    {
+        musicEnabled = enabled;
+    }
+    public bool GetMusicEnabled()
+    {
+        return musicEnabled;
+    }
 }
