@@ -11,6 +11,7 @@ public class GameAudio : MonoBehaviour
     private void Start()
     {
         GameMaster.gameAudio = this;
+        audioS.volume = Settings.settings.GetVolume()/10;
     }
 
     public void PlayWallSound()

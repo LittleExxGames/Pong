@@ -12,9 +12,9 @@ public class SetSettings : MonoBehaviour
     {
         volumeSlider.value = Settings.settings.GetVolume();
     }
-    public void OnVolumeSliderChanged(float newVolume)
+    public void OnVolumeSliderChanged()
     {
-        newVolume = volumeSlider.value;
+        float newVolume = volumeSlider.value;
         if (GameMaster.gameAudio != null)
         {
             GameMaster.gameAudio.GetComponent<AudioSource>().volume = newVolume/10f;

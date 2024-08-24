@@ -101,7 +101,7 @@ public class GameRules : MonoBehaviour
             case 3:
                 challenges[2].SetActive(true);
                 Ball.SetBrightness(3.85f);
-                AIController.SetSpeed(5);
+                AIController.SetSpeed(4);
                 ballManager.SetCap(new Vector2(3.5f, 14f));
                 break;
         }

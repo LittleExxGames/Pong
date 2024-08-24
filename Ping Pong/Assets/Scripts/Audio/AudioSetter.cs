@@ -12,6 +12,7 @@ public class AudioSetter : MonoBehaviour
         if (doAL)
         {
             AudioLoss();
+            doAL = false;
         }
     }
 

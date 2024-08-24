@@ -9,7 +9,7 @@ public class ArenaMenu : MonoBehaviour
     public enum MENU
     { NONE, SETTINGS, SOPTIONS, WIN, LOSE }
 
-    private MENU menu = MENU.SETTINGS;
+    private MENU menu = MENU.NONE;
     [SerializeField] private GameObject settings;
     [SerializeField] private GameObject sOptions;
     [SerializeField] private GameObject win;
